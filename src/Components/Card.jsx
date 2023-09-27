@@ -3,7 +3,13 @@ import "./Card.css";
 
 function Card() {
   const [pokemonData, setPokemonData] = useState([]);
-  const pokemonApi = "https://pokeapi.co/api/v2/pokemon/?limit=150";
+  const pokemonApi = "https://pokeapi.co/api/v2/pokemon/?limit=151";
+  const [entryValue, setEntryValue] = useState("");
+
+  function handleChange(e) {
+    setEntryValue(e.target.value);
+  }
+
   useEffect(() => {
     fetch(pokemonApi)
       .then((response) => response.json())
@@ -12,21 +18,25 @@ function Card() {
 
   return (
     <>
+      <input type="text" onChange={(event) => handleChange(event)} />
       {pokemonData.map((pokemon, index) => {
-        return (
-          <div className="card" key={index}>
-            <h2 className="pokemonName">{pokemon.name}</h2>
-            <img
-              className="pokemonImg"
-              src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${
-                index + 1
-              }.png`}
-              alt={pokemon.name}
-            />
-          </div>
-        );
-      })}
+          if (pokemon.name.includes(entryValue)) {
+            return (
+              <div className="card" key={index}>
+                <img
+                  className="pokemonImg"
+                  src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${
+                    index + 1
+                  }.png`}
+                  alt={pokemon.name}
+                />
+                <h2 className="pokemonName">{pokemon.name}</h2>
+              </div>
+            );
+          }
+        }
     </>
   );
 }
 export { Card };
+export { entryValue }
